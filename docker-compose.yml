@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+  pocketbase:
+    build: .
+    container_name: pocketbase_container
+    ports:
+      - "8090:8090"
+    volumes:
+      - pocketbase_data:/app/pb_data
+    restart: always
+
+volumes:
+  pocketbase_data:
