@@ -6,22 +6,44 @@ if [ "$(id -u)" -ne 0 ]; then
   exit 1
 fi
 
-# ตั้งค่าพาร์ติชัน (sda1 สำหรับ bootable root partition)
+# ตั้งค่าพาร์ติชัน (sda1 สำหรับ boot, sda2 สำหรับ swap, sda3 สำหรับ root)
 echo "Creating partitions..."
 (
-  echo o      # สร้าง MBR ใหม่
-  echo n      # สร้างพาร์ติชันใหม่
-  echo p      # Primary partition
-  echo 1      # พาร์ติชันที่ 1
-  echo        # ค่าเริ่มต้นสำหรับ first sector
-  echo +30G   # กำหนดขนาด 30GB สำหรับ root
-  echo a      # ทำให้พาร์ติชันนี้ bootable
-  echo w      # เขียนการตั้งค่า
+  echo o       # สร้าง MBR ใหม่
+  echo n       # สร้างพาร์ติชันใหม่
+  echo p       # Primary partition
+  echo 1       # พาร์ติชันที่ 1 สำหรับ boot
+  echo         # ค่าเริ่มต้นสำหรับ first sector
+  echo +1G     # ขนาด 1GB สำหรับ boot
+
+  echo n       # สร้างพาร์ติชันใหม่
+  echo p       # Primary partition
+  echo 2       # พาร์ติชันที่ 2 สำหรับ swap
+  echo         # ค่าเริ่มต้นสำหรับ first sector
+  echo +2G     # ขนาด 2GB สำหรับ swap
+
+  echo n       # สร้างพาร์ติชันใหม่
+  echo p       # Primary partition
+  echo 3       # พาร์ติชันที่ 3 สำหรับ root
+  echo         # ค่าเริ่มต้นสำหรับ first sector
+  echo         # ใช้พื้นที่ที่เหลือทั้งหมด (17GB)
+
+  echo a       # ทำให้พาร์ติชันที่ 1 bootable
+  echo 1       # กำหนดพาร์ติชัน bootable เป็น sda1
+
+  echo w       # เขียนการตั้งค่า
 ) | fdisk /dev/sda
 
-# ฟอร์แมตและเมาท์พาร์ติชัน
-mkfs.ext4 /dev/sda1
-mount /dev/sda1 /mnt
+# ฟอร์แมตพาร์ติชัน
+mkfs.ext4 /dev/sda1        # ฟอร์แมต boot เป็น ext4
+mkfs.ext4 /dev/sda3        # ฟอร์แมต root เป็น ext4
+mkswap /dev/sda2           # ฟอร์แมต swap
+swapon /dev/sda2           # เปิดใช้งาน swap
+
+# เมาท์พาร์ติชัน
+mount /dev/sda3 /mnt
+mkdir /mnt/boot
+mount /dev/sda1 /mnt/boot
 
 # ติดตั้งระบบหลัก
 echo "Installing base system..."
