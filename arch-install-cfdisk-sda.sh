@@ -122,4 +122,12 @@ systemctl enable dhcpcd
 
 EOF
 
-echo "Installation complete! You can now reboot."
+echo "Congratulations $username"
+echo "Installation complete!"
+read -p "Do you want to reboot now? (y/n) " reboot_choice
+if [ "$reboot_choice" == "y" ]; then
+  echo "Rebooting the system..."
+  reboot
+else
+  echo "System will not reboot. You can reboot manually when ready."
+fi
