@@ -66,7 +66,7 @@ read -s rootpassword
 echo $rootpassword | passwd --stdin root
 
 # สร้าง user ใหม่
-useradd -m -G wheel -s /bin/bash $username
+useradd -m -G wheel,storage,video,audio,users,input -s /bin/bash $username
 echo "Set password for $username:"
 read -s userpassword
 echo $userpassword | passwd --stdin $username
