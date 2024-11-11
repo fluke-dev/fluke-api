@@ -71,6 +71,10 @@ echo "Set password for $username:"
 read -s userpassword
 echo $userpassword | passwd --stdin $username
 
+pacman -S grub --noconfirm
+grub-install --target=i386-pc /dev/sda
+grub-mkconfig -o /boot/grub/grub.cfg
+
 # อนุญาตให้กลุ่ม wheel ใช้ sudo
 pacman -S sudo --noconfirm
 sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
