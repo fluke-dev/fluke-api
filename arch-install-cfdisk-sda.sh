@@ -118,7 +118,7 @@ systemctl enable ly
 
 EOF
 
-# ติดตั้ง dhcpcd สำหรับการเชื่อมต่อเครือข่าย
+# ติดตั้ง dhcpcd สำหรับการเชื่อมต่อเครือข่ายดี
 arch-chroot /mnt /bin/bash <<EOF
 
 pacman -S dhcpcd --noconfirm
