@@ -6,6 +6,9 @@ if [ "$(id -u)" -ne 0 ]; then
   exit 1
 fi
 
+# รับชื่อผู้ใช้จากผู้ใช้
+read -p "Enter your desired username: " username
+
 # เปิด cfdisk เพื่อให้ผู้ใช้แบ่งพาร์ติชันเอง
 echo "Launching cfdisk... Please create the following partitions manually:"
 echo "- Boot partition (e.g., 1 GB, primary, type Linux, marked as bootable)"
@@ -63,9 +66,9 @@ grub-install --target=i386-pc /dev/sda
 grub-mkconfig -o /boot/grub/grub.cfg
 
 # สร้าง user ใหม่
-useradd -m -G wheel -s /bin/bash user
-echo "Set password for user:"
-passwd user
+useradd -m -G wheel -s /bin/bash $username
+echo "Set password for $username:"
+passwd $username
 
 # อนุญาตให้กลุ่ม wheel ใช้ sudo
 pacman -S sudo --noconfirm
@@ -80,18 +83,18 @@ arch-chroot /mnt /bin/bash <<EOF
 pacman -S bspwm sxhkd polybar dmenu picom st xorg-server xorg-xinit --noconfirm
 
 # สร้างไฟล์ config สำหรับ bspwm และ sxhkd
-mkdir -p /home/user/.config/bspwm
-mkdir -p /home/user/.config/sxhkd
-cp /usr/share/doc/bspwm/examples/bspwmrc /home/user/.config/bspwm/bspwmrc
-cp /usr/share/doc/bspwm/examples/sxhkdrc /home/user/.config/sxhkd/sxhkdrc
-chmod +x /home/user/.config/bspwm/bspwmrc
+mkdir -p /home/$username/.config/bspwm
+mkdir -p /home/$username/.config/sxhkd
+cp /usr/share/doc/bspwm/examples/bspwmrc /home/$username/.config/bspwm/bspwmrc
+cp /usr/share/doc/bspwm/examples/sxhkdrc /home/$username/.config/sxhkd/sxhkdrc
+chmod +x /home/$username/.config/bspwm/bspwmrc
 
 # ตั้งค่า dmenu
-echo 'super + d' >> /home/user/.config/sxhkd/sxhkdrc
-echo '    dmenu_run' >> /home/user/.config/sxhkd/sxhkdrc
+echo 'super + d' >> /home/$username/.config/sxhkd/sxhkdrc
+echo '    dmenu_run' >> /home/$username/.config/sxhkd/sxhkdrc
 
-# เปลี่ยนเจ้าของไฟล์ทั้งหมดเป็น user
-chown -R user:user /home/user/.config
+# เปลี่ยนเจ้าของไฟล์ทั้งหมดเป็น $username
+chown -R $username:$username /home/$username/.config
 
 EOF
 
