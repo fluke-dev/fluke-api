@@ -47,6 +47,10 @@ echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 echo "th_TH.UTF-8 UTF-8" >> /etc/locale.gen
 locale-gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
+echo "LC_TIME=th_TH.UTF-8" >> /etc/locale.conf
+
+echo "export LANG=en_US.UTF-8
+export LC_TIME=th_TH.UTF-8" >> ~/.bashrc
 
 # ตั้งค่า hostname
 echo "arch-bspwm" > /etc/hostname
@@ -80,7 +84,7 @@ EOF
 arch-chroot /mnt /bin/bash <<EOF
 
 # ติดตั้ง bspwm, sxhkd, และอื่นๆ
-pacman -S bspwm sxhkd polybar dmenu picom xorg-server xorg-xinit --noconfirm
+pacman -S bspwm sxhkd polybar dmenu picom nemo alacritty rxvt-unicode neovim git htop neofetch rofi fish xorg-xauth xorg-server xorg-xinit --noconfirm
 
 # สร้างไฟล์ config สำหรับ bspwm และ sxhkd
 mkdir -p /home/$username/.config/bspwm
