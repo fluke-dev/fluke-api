@@ -62,17 +62,14 @@ echo "127.0.1.1   arch-bspwm.localdomain arch-bspwm" >> /etc/hosts
 
 # ตั้งรหัสผ่าน root
 echo "Set root password:"
-passwd
-
-# ติดตั้ง GRUB สำหรับ BIOS
-pacman -S grub --noconfirm
-grub-install --target=i386-pc /dev/sda
-grub-mkconfig -o /boot/grub/grub.cfg
+read -s rootpassword
+echo $rootpassword | passwd --stdin root
 
 # สร้าง user ใหม่
 useradd -m -G wheel -s /bin/bash $username
 echo "Set password for $username:"
-passwd $username
+read -s userpassword
+echo $userpassword | passwd --stdin $username
 
 # อนุญาตให้กลุ่ม wheel ใช้ sudo
 pacman -S sudo --noconfirm
