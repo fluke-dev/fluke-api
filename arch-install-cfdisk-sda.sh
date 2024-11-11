@@ -80,7 +80,7 @@ EOF
 arch-chroot /mnt /bin/bash <<EOF
 
 # ติดตั้ง bspwm, sxhkd, และอื่นๆ
-pacman -S bspwm sxhkd polybar dmenu picom st xorg-server xorg-xinit --noconfirm
+pacman -S bspwm sxhkd polybar dmenu picom xorg-server xorg-xinit --noconfirm
 
 # สร้างไฟล์ config สำหรับ bspwm และ sxhkd
 mkdir -p /home/$username/.config/bspwm
