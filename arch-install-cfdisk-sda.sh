@@ -50,7 +50,7 @@ echo "LANG=en_US.UTF-8" > /etc/locale.conf
 echo "LC_TIME=th_TH.UTF-8" >> /etc/locale.conf
 
 echo "export LANG=en_US.UTF-8
-export LC_TIME=th_TH.UTF-8" >> ~/.bashrc
+export LC_TIME=th_TH.UTF-8" >> /home/$username/.bashrc
 
 # ตั้งค่า hostname
 echo "arch-bspwm" > /etc/hostname
@@ -89,9 +89,16 @@ pacman -S bspwm sxhkd polybar dmenu picom nemo alacritty rxvt-unicode neovim git
 # สร้างไฟล์ config สำหรับ bspwm และ sxhkd
 mkdir -p /home/$username/.config/bspwm
 mkdir -p /home/$username/.config/sxhkd
+mkdir -p /home/$username/.config/picom
+mkdir -p /home/$username/.config/polybar
 cp /usr/share/doc/bspwm/examples/bspwmrc /home/$username/.config/bspwm/bspwmrc
 cp /usr/share/doc/bspwm/examples/sxhkdrc /home/$username/.config/sxhkd/sxhkdrc
+cp /etc/xdg/picom.conf /home/$username/.config/picom/picom.conf
+cp /etc/polybar/config.ini /home/$username/.config/polybar/config.ini
 chmod +x /home/$username/.config/bspwm/bspwmrc
+
+echo "sxhkd &" >> /home/$username/.config/bspwm/bspwmrc
+echo "polybar &" >> /home/$username/.config/bspwm/bspwmrc
 
 # ตั้งค่า dmenu
 echo 'super + d' >> /home/$username/.config/sxhkd/sxhkdrc
