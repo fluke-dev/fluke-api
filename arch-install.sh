@@ -107,4 +107,30 @@ systemctl enable ly
 
 EOF
 
+# ติดตั้ง dhcpcd สำหรับการเชื่อมต่อเครือข่าย
+arch-chroot /mnt /bin/bash <<EOF
+
+pacman -S dhcpcd --noconfirm
+systemctl enable dhcpcd
+
+EOF
+
+# ติดตั้ง Alacritty, PulseAudio และ font
+arch-chroot /mnt /bin/bash <<EOF
+
+# ติดตั้งแพ็กเกจพื้นฐานอื่นๆ
+pacman -S alacritty git curl noto-fonts noto-fonts-cjk noto-fonts-emoji --noconfirm
+
+# ติดตั้ง PulseAudio สำหรับจัดการเสียง
+pacman -S pulseaudio pulseaudio-alsa pavucontrol --noconfirm
+
+# เพิ่มการตั้งค่าเรียกใช้ Alacritty, PulseAudio และโปรแกรมพื้นฐาน
+echo 'alacritty &' >> /home/user/.config/bspwm/bspwmrc
+echo 'pavucontrol &' >> /home/user/.config/bspwm/bspwmrc
+echo 'exec bspwm' >> /home/user/.xinitrc
+
+chown -R user:user /home/user/.config
+
+EOF
+
 echo "Installation complete! You can now reboot."
