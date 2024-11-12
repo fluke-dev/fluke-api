@@ -62,20 +62,7 @@ echo "127.0.0.1   localhost" >> /etc/hosts
 echo "::1         localhost" >> /etc/hosts
 echo "127.0.1.1   arch-bspwm.localdomain arch-bspwm" >> /etc/hosts
 
-EOF
-# ตั้งรหัสผ่าน root
-echo "Set root password"
-arch-chroot /mnt /bin/bash <<EOF
-
-passwd root
-
-# สร้างผู้ใช้ใหม่และตั้งรหัสผ่าน
 useradd -m -G wheel,storage,video,audio,users,input -s /bin/bash $username
-EOF
-echo "Set password for $username"
-arch-chroot /mnt /bin/bash <<EOF
-
-passwd $username
 
 pacman -S grub --noconfirm
 grub-install --target=i386-pc /dev/vda
@@ -130,14 +117,8 @@ arch-chroot /mnt /bin/bash <<EOF
 pacman -S dhcpcd --noconfirm
 systemctl enable dhcpcd
 
+echo "Congratulations $username"
+
 EOF
 
-echo "Congratulations $username"
 echo "Installation complete!"
-read -p "Do you want to reboot now? (y/n) " reboot_choice
-if [ "$reboot_choice" == "y" ]; then
-  echo "Rebooting the system..."
-  reboot
-else
-  echo "System will not reboot. You can reboot manually when ready."
-fi
