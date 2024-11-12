@@ -61,14 +61,12 @@ echo "::1         localhost" >> /etc/hosts
 echo "127.0.1.1   arch-bspwm.localdomain arch-bspwm" >> /etc/hosts
 
 # ตั้งรหัสผ่าน root
-echo "Set root password:"
-read -s rootpassword
+read -p "Set root passwd: " rootpassword
 echo $rootpassword | passwd --stdin root
 
 # สร้าง user ใหม่
 useradd -m -G wheel,storage,video,audio,users,input -s /bin/bash $username
-echo "Set password for $username:"
-read -s userpassword
+read -p "Set passwd for $username: " userpassword
 echo $userpassword | passwd --stdin $username
 
 pacman -S grub --noconfirm
