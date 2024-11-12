@@ -49,8 +49,10 @@ locale-gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
 echo "LC_TIME=th_TH.UTF-8" >> /etc/locale.conf
 
+touch /home/$username/.bashrc
+
 echo "export LANG=en_US.UTF-8
-export LC_TIME=th_TH.UTF-8" >> /home/$username/.bashrc
+export LC_TIME=th_TH.UTF-8" > /home/$username/.bashrc
 
 # ตั้งค่า hostname
 echo "arch-bspwm" > /etc/hostname
