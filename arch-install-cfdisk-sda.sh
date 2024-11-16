@@ -49,27 +49,20 @@ locale-gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
 echo "LC_TIME=th_TH.UTF-8" >> /etc/locale.conf
 
+touch /home/$username/.bashrc
+
 echo "export LANG=en_US.UTF-8
-export LC_TIME=th_TH.UTF-8" >> /home/$username/.bashrc
+export LC_TIME=th_TH.UTF-8" > /home/$username/.bashrc
 
 # ตั้งค่า hostname
-echo "arch-bspwm" > /etc/hostname
+echo "flukedev" > /etc/hostname
 
 # ตั้งค่า hosts file
 echo "127.0.0.1   localhost" >> /etc/hosts
 echo "::1         localhost" >> /etc/hosts
-echo "127.0.1.1   arch-bspwm.localdomain arch-bspwm" >> /etc/hosts
+echo "127.0.1.1   flukedev.localdomain flukedev" >> /etc/hosts
 
-# ตั้งรหัสผ่าน root
-echo "Set root password:"
-read -s rootpassword
-echo $rootpassword | passwd --stdin root
-
-# สร้าง user ใหม่
 useradd -m -G wheel,storage,video,audio,users,input -s /bin/bash $username
-echo "Set password for $username:"
-read -s userpassword
-echo $userpassword | passwd --stdin $username
 
 pacman -S grub --noconfirm
 grub-install --target=i386-pc /dev/sda
@@ -85,25 +78,17 @@ EOF
 arch-chroot /mnt /bin/bash <<EOF
 
 # ติดตั้ง bspwm, sxhkd, และอื่นๆ
-pacman -S bspwm sxhkd polybar dmenu picom nemo alacritty rxvt-unicode neovim git htop neofetch rofi fish xorg-xauth xorg-server xorg-xinit --noconfirm
+pacman -S polybar dmenu picom nemo alacritty neovim git htop neofetch rofi fish xorg-xauth xorg-server xorg-xinit --noconfirm
 
 # สร้างไฟล์ config สำหรับ bspwm และ sxhkd
-mkdir -p /home/$username/.config/bspwm
-mkdir -p /home/$username/.config/sxhkd
+
 mkdir -p /home/$username/.config/picom
 mkdir -p /home/$username/.config/polybar
-cp /usr/share/doc/bspwm/examples/bspwmrc /home/$username/.config/bspwm/bspwmrc
-cp /usr/share/doc/bspwm/examples/sxhkdrc /home/$username/.config/sxhkd/sxhkdrc
+
 cp /etc/xdg/picom.conf /home/$username/.config/picom/picom.conf
 cp /etc/polybar/config.ini /home/$username/.config/polybar/config.ini
-chmod +x /home/$username/.config/bspwm/bspwmrc
 
-echo "sxhkd &" >> /home/$username/.config/bspwm/bspwmrc
-echo "polybar &" >> /home/$username/.config/bspwm/bspwmrc
 
-# ตั้งค่า dmenu
-echo 'super + d' >> /home/$username/.config/sxhkd/sxhkdrc
-echo '    dmenu_run' >> /home/$username/.config/sxhkd/sxhkdrc
 
 # เปลี่ยนเจ้าของไฟล์ทั้งหมดเป็น $username
 chown -R $username:$username /home/$username/.config
@@ -118,20 +103,14 @@ systemctl enable ly
 
 EOF
 
-# ติดตั้ง dhcpcd สำหรับการเชื่อมต่อเครือข่ายดี
+# ติดตั้ง dhcpcd สำหรับการเชื่อมต่อเครือข่าย
 arch-chroot /mnt /bin/bash <<EOF
 
 pacman -S dhcpcd --noconfirm
 systemctl enable dhcpcd
 
+echo "Congratulations $username"
+
 EOF
 
-echo "Congratulations $username"
 echo "Installation complete!"
-read -p "Do you want to reboot now? (y/n) " reboot_choice
-if [ "$reboot_choice" == "y" ]; then
-  echo "Rebooting the system..."
-  reboot
-else
-  echo "System will not reboot. You can reboot manually when ready."
-fi
